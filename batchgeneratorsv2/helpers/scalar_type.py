@@ -17,6 +17,10 @@ def sample_scalar(scalar_type: RandomScalar, *args, **kwargs):
         return np.random.uniform(*scalar_type)
     elif callable(scalar_type):
         return scalar_type(*args, **kwargs)
+    elif isinstance(scalar_type, dict) and 'dim' in kwargs:
+        ranges = scalar_type[['x', 'y', 'z'][kwargs['dim']]]
+        low, high = ranges[int(np.random.uniform(0, len(ranges) - 0.00001))]
+        return np.random.uniform(low, high)
     else:
         raise RuntimeError('Unknown type: %s. Expected: int, float, list, tuple, callable', type(scalar_type))
 
